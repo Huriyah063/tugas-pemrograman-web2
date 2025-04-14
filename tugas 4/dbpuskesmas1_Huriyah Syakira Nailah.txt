@@ -1,0 +1,136 @@
+Lenovo@LAPTOP-7JLD5I0N c:\xampp
+# mysql -u root -p
+Enter password:
+Welcome to the MariaDB monitor.  Commands end with ; or \g.
+Your MariaDB connection id is 10
+Server version: 10.4.32-MariaDB mariadb.org binary distribution
+
+Copyright (c) 2000, 2018, Oracle, MariaDB Corporation Ab and others.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+MariaDB [(none)]> DROP DATABASE dbpuskesmas1;
+Query OK, 2 rows affected (0.029 sec)
+
+MariaDB [(none)]> CREATE DATABASE dbpuskesmas1;
+Query OK, 1 row affected (0.002 sec)
+
+MariaDB [(none)]> USE dbpuskesmas1;
+Database changed
+MariaDB [dbpuskesmas1]> CREATE TABLE kelurahan(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama_kelurahan VARCHAR(100) NOT NULL
+    -> );
+Query OK, 0 rows affected (0.043 sec)
+
+MariaDB [dbpuskesmas1]> CREATE TABLE unit_kerja(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> kode_unit VARCHAR(50) NOT NULL,
+    -> nama_unit VARCHAR(100) NOT NULL,
+    -> keterangan VARCHAR(255));
+Query OK, 0 rows affected (0.043 sec)
+
+MariaDB [dbpuskesmas1]> CREATE TABLE pasien(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> kode VARCHAR(20)NOT NULL,
+    -> nama VARCHAR(45) NOT NULL,
+    -> tmp_lahir VARCHAR(30) NOT NULL,
+    -> tgl_lahir DATE,
+    -> gender CHAR(1),
+    -> email VARCHAR(100),
+    -> alamat VARCHAR(100), kelurahan_id INT,
+    -> FOREIGN KEY(kelurahan_id)
+    -> REFERENCES kelurahan(id));
+Query OK, 0 rows affected (0.062 sec)
+
+MariaDB [dbpuskesmas1]> CREATE TABLE paramedik(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> nama VARCHAR(20) NOT NULL,
+    -> gender CHAR(1) NULL,
+    -> tmp_lahir VARCHAR(30),
+    -> tgl_lahir DATE,
+    -> kategori ENUM("Dokter", "Perawat", "Bidan"),
+    -> telpon VARCHAR(20),
+    -> alamat VARCHAR(100),
+    -> unitkerja_id INT,
+    -> FOREIGN KEY(unitkerja_id)
+    -> REFERENCES unit_kerja(id));
+Query OK, 0 rows affected (0.061 sec)
+
+MariaDB [dbpuskesmas1]> CREATE TABLE periksa(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> tanggal DATE,
+    -> berat DOUBLE,
+    -> tinggi DOUBLE,
+    -> tensi VARCHAR(20),
+    -> keterangan VARCHAR (100),
+    -> pasien_id INT,
+    -> dokter_id INT,
+    -> FOREIGN KEY(pasien_id) REFERENCES pasien(id),
+    -> FOREIGN KEY(dokter_id) REFERENCES paramedik(id)
+    -> );
+Query OK, 0 rows affected (0.072 sec)
+
+MariaDB [dbpuskesmas1]> INSERT INTO kelurahan (nama_kelurahan) VALUES
+    -> ('Kelurahan A'), ('Kelurahan B'), ('Kelurahan C'), ('Kelurahan D'), ('Kelurahan E'),
+    -> ('Kelurahan F'), ('Kelurahan G'), ('Kelurahan H'), ('Kelurahan I'), ('Kelurahan J');
+Query OK, 10 rows affected (0.035 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas1]> INSERT INTO unit_kerja (kode_unit, nama_unit, keterangan) VALUES
+    -> ('UK001', 'Unit Gigi', 'Pelayanan gigi dan mulut'),
+    -> ('UK002', 'Unit Umum', 'Pelayanan umum'),
+    -> ('UK003', 'Unit KIA', 'Pelayanan ibu dan anak'),
+    -> ('UK004', 'Unit Lansia', 'Pelayanan lansia'),
+    -> ('UK005', 'Unit Gizi', 'Pelayanan gizi'),
+    -> ('UK006', 'Unit Vaksin', 'Pelayanan vaksinasi'),
+    -> ('UK007', 'Unit Lab', 'Pelayanan laboratorium'),
+    -> ('UK008', 'Unit TB', 'Pelayanan TB Paru'),
+    -> ('UK009', 'Unit Konseling', 'Konseling kesehatan mental'),
+    -> ('UK010', 'Unit Rawat Jalan', 'Pelayanan rawat jalan');
+Query OK, 10 rows affected (0.032 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas1]> INSERT INTO pasien (kode, nama, tmp_lahir, tgl_lahir, gender, email, alamat, kelurahan_id) VALUES
+    -> ('P001', 'Ali', 'Jakarta', '1990-01-01', 'L', 'ali@mail.com', 'Jl. Melati 1', 1),
+    -> ('P002', 'Budi', 'Bandung', '1992-02-02', 'L', 'budi@mail.com', 'Jl. Mawar 2', 2),
+    -> ('P003', 'Citra', 'Surabaya', '1994-03-03', 'P', 'citra@mail.com', 'Jl. Kenanga 3', 3),
+    -> ('P004', 'Dina', 'Bekasi', '1991-04-04', 'P', 'dina@mail.com', 'Jl. Anggrek 4', 4),
+    -> ('P005', 'Eka', 'Depok', '1993-05-05', 'L', 'eka@mail.com', 'Jl. Flamboyan 5', 5),
+    -> ('P006', 'Fajar', 'Bogor', '1989-06-06', 'L', 'fajar@mail.com', 'Jl. Dahlia 6', 6),
+    -> ('P007', 'Gita', 'Tangerang', '1995-07-07', 'P', 'gita@mail.com', 'Jl. Sakura 7', 7),
+    -> ('P008', 'Hani', 'Cikarang', '1996-08-08', 'P', 'hani@mail.com', 'Jl. Teratai 8', 8),
+    -> ('P009', 'Iqbal', 'Cimahi', '1997-09-09', 'L', 'iqbal@mail.com', 'Jl. Kamboja 9', 9),
+    -> ('P010', 'Joko', 'Semarang', '1998-10-10', 'L', 'joko@mail.com', 'Jl. Bougenville 10', 10);
+Query OK, 10 rows affected (0.037 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas1]> INSERT INTO paramedik (nama, gender, tmp_lahir, tgl_lahir, kategori, telpon, alamat, unitkerja_id) VALUES
+    -> ('Dr. Andi', 'L', 'Jakarta', '1980-01-01', 'Dokter', '0812340001', 'Jl. Merpati', 1),
+    -> ('Suster Bina', 'P', 'Bogor', '1985-02-02', 'Perawat', '0812340002', 'Jl. Rajawali', 2),
+    -> ('Bidan Cici', 'P', 'Depok', '1990-03-03', 'Bidan', '0812340003', 'Jl. Elang', 3),
+    -> ('Dr. Dodi', 'L', 'Bandung', '1982-04-04', 'Dokter', '0812340004', 'Jl. Garuda', 4),
+    -> ('Suster Eka', 'P', 'Bekasi', '1986-05-05', 'Perawat', '0812340005', 'Jl. Cendrawasih', 5),
+    -> ('Bidan Fitri', 'P', 'Tangerang', '1991-06-06', 'Bidan', '0812340006', 'Jl. Pelikan', 6),
+    -> ('Dr. Gani', 'L', 'Surabaya', '1983-07-07', 'Dokter', '0812340007', 'Jl. Jalak', 7),
+    -> ('Suster Hani', 'P', 'Medan', '1987-08-08', 'Perawat', '0812340008', 'Jl. Kutilang', 8),
+    -> ('Bidan Intan', 'P', 'Yogya', '1992-09-09', 'Bidan', '0812340009', 'Jl. Cucak Rowo', 9),
+    -> ('Dr. Juna', 'L', 'Solo', '1984-10-10', 'Dokter', '0812340010', 'Jl. Kakatua', 10);
+Query OK, 10 rows affected (0.032 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas1]> INSERT INTO periksa (tanggal, berat, tinggi, tensi, keterangan, pasien_id, dokter_id) VALUES
+    -> ('2024-01-01', 60.5, 170, '120/80', 'Cek rutin', 1, 1),
+    -> ('2024-01-02', 55.0, 165, '110/70', 'Demam', 2, 2),
+    -> ('2024-01-03', 62.3, 172, '130/85', 'Batuk pilek', 3, 3),
+    -> ('2024-01-04', 70.1, 180, '140/90', 'Tekanan darah tinggi', 4, 4),
+    -> ('2024-01-05', 50.0, 160, '100/60', 'Cek kehamilan', 5, 5),
+    -> ('2024-01-06', 65.2, 175, '125/80', 'Keluhan pencernaan', 6, 6),
+    -> ('2024-01-07', 58.4, 168, '118/75', 'Cek gigi', 7, 7),
+    -> ('2024-01-08', 54.0, 163, '105/65', 'Flu ringan', 8, 8),
+    -> ('2024-01-09', 61.7, 169, '122/78', 'Kontrol pasca operasi', 9, 9),
+    -> ('2024-01-10', 68.0, 177, '135/88', 'Sakit kepala', 10, 10);
+Query OK, 10 rows affected (0.018 sec)
+Records: 10  Duplicates: 0  Warnings: 0
+
+MariaDB [dbpuskesmas1]>
